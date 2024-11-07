@@ -1,14 +1,15 @@
 FROM node:18.14.2
-
 WORKDIR /usr/src/app
 
-RUN npm install -g @nestjs/cli
-
-# Copy application dependency manifests to the container image.
-# Copying this first prevents re-running npm install on every code change.
+# Copy package.json and install dependencies first
 COPY package*.json ./
+RUN npm install
 
+# Copy the rest of the application files
 COPY . .
 
-CMD npm install && \
-  nest start --watch
+# Build the application
+RUN npm run build
+
+# Run the NestJS app in watch mode
+CMD ["npm", "run", "start:dev"]
