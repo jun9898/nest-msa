@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
+import { FindUserResDto } from './dto/res.dto';
 
 @Injectable()
 export class UserService {
@@ -24,13 +25,30 @@ export class UserService {
     return userId;
   }
 
-  // TODO
-  async validateUser(email: string, password) {
-    return '';
+  async validateUser(email: string, password: string) {
+    const pattern = { cmd: 'validate' };
+    const payload = { email, password };
+    const { id } = await firstValueFrom<{ id: string }>(
+      this.client.send<{ id: string }>(pattern, payload),
+    );
+    return id;
   }
 
-  // TODO
   async checkUserIsAdmin(id: string) {
-    return true;
+    const pattern = { cmd: 'checkUserIsAdmin' };
+    const payload = { id };
+    const { isAdmin } = await firstValueFrom<{ isAdmin: boolean }>(
+      this.client.send<{ isAdmin: boolean }>(pattern, payload),
+    );
+    return isAdmin;
+  }
+
+  async findAll(page: number, size: number) {
+    const pattern = { cmd: 'findAllUser' };
+    const payload = { page, size };
+    const { findUserResDtos } = await firstValueFrom<{ findUserResDtos: FindUserResDto[] }>(
+      this.client.send<{ findUserResDtos: FindUserResDto[] }>(pattern, payload),
+    );
+    return findUserResDtos;
   }
 }
