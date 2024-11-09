@@ -8,6 +8,7 @@ import postgresConfig from './config/postgres.config';
 import swaggerConfig from './config/swagger.config';
 import { UserModule } from './user/user.module';
 import { VideoModule } from './video/video.module';
+import { TransformInterceptor } from "./common/interceptor/transform.interceptor";
 
 @Module({
   imports: [
@@ -42,7 +43,13 @@ import { VideoModule } from './video/video.module';
     UserModule,
     VideoModule,
   ],
-  providers: [Logger],
+  providers: [
+    Logger,
+    {
+      provide: 'APP_INTERCEPTOR',
+      useClass: TransformInterceptor,
+    }
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {

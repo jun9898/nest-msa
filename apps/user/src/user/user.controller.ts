@@ -2,6 +2,7 @@ import { Controller } from '@nestjs/common';
 import { UserService } from './user.service';
 import { MessagePattern } from '@nestjs/microservices';
 import { User } from './entity/user.entity';
+import { FindUserResDto } from "./dto/res.dto";
 
 @Controller()
 export class UserController {
@@ -39,8 +40,8 @@ export class UserController {
   }
 
   @MessagePattern({ cmd: 'findAllUser' })
-  async findAll({ page, size, }: { page: number; size: number; }): Promise<{ user: User[] }> {
+  async findAll({ page, size, }: { page: number; size: number; }): Promise<{ findUserResDtos: FindUserResDto[] }> {
     const users =  await this.userService.findAll(page, size);
-    return { users }
+    return { findUserResDtos: users };
   }
 }

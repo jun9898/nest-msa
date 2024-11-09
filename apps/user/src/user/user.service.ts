@@ -4,6 +4,7 @@ import { User } from './entity/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Role } from './entity/user.enum';
+import { FindUserResDto } from "./dto/res.dto";
 
 @Injectable()
 export class UserService {
@@ -40,13 +41,14 @@ export class UserService {
   async checkUserIsAdmin(id: string) {
     const user = await this.userRepository.findOneBy({ id });
     return user.role === Role.Admin;
-
   }
 
   async findAll(page: number, size: number) {
     return this.userRepository.find({
       skip: (page - 1) * size,
       take: size,
-    })
+    }).then(users => users.map(user => {
+      return FindUserResDto.from(user);
+    }));
   }
 }

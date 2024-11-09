@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from "@nestjs/common";
 import { UserService } from './user.service';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { UserController } from './user.controller';
@@ -21,6 +21,7 @@ import { JwtModule } from '@nestjs/jwt';
         });
       },
     },
+    Logger
   ],
   controllers: [UserController],
 })
