@@ -11,11 +11,7 @@ import {
 export class AnalyticsController {
   constructor(private readonly analyticsService: AnalyticsService) {}
 
-  @Get()
-  getHello(): string {
-    return this.analyticsService.getHello();
-  }
-
+  // 비동기 패턴
   @EventPattern('video_downloaded')
   async handleVideoDownloaded(
     @Payload() message: any,
@@ -23,5 +19,6 @@ export class AnalyticsController {
   ) {
     console.log(message);
     console.log(`Topic: ${context.getTopic()}`);
+    this.analyticsService.updateVideoDownloadCnt(message.id);
   }
 }
